@@ -1,5 +1,5 @@
 {
-    "name": "kilte/silex-pagination",
+    "name": "juizmill/silex-pagination",
     "type": "library",
     "license": "MIT",
     "description": "PaginationServiceProvider for Silex micro framework",
