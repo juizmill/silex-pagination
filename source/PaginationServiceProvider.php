@@ -10,8 +10,8 @@
 namespace Kilte\Silex\Pagination;
 
 use Kilte\Pagination\Pagination;
-use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 /**
  * PaginationServiceProvider Class
@@ -20,34 +20,24 @@ use Silex\ServiceProviderInterface;
  */
 class PaginationServiceProvider implements ServiceProviderInterface
 {
-
     /**
      * {@inheritdoc}
      */
-    public function register(Application $app)
+    public function register(Container $pimple)
     {
-        $app['pagination.per_page']   = isset($app['pagination.per_page']) ? (int) $app['pagination.per_page'] : 20;
-        $app['pagination.neighbours'] = isset($app['pagination.neighbours']) ? (int) $app['pagination.neighbours'] : 4;
-        $app['pagination']            = $app->protect(
-            function ($total, $current, $perPage = null, $neighbours = null) use ($app) {
+        $pimple['pagination.per_page']   = isset($pimple['pagination.per_page']) ? (int) $pimple['pagination.per_page'] : 20;
+        $pimple['pagination.neighbours'] = isset($pimple['pagination.neighbours']) ? (int) $pimple['pagination.neighbours'] : 4;
+        $pimple['pagination']            = $pimple->protect(
+            function ($total, $current, $perPage = null, $neighbours = null) use ($pimple) {
                 if ($perPage === null) {
-                    $perPage = $app['pagination.per_page'];
+                    $perPage = $pimple['pagination.per_page'];
                 }
                 if ($neighbours === null) {
-                    $neighbours = $app['pagination.neighbours'];
+                    $neighbours = $pimple['pagination.neighbours'];
                 }
 
                 return new Pagination($total, $current, $perPage, $neighbours);
             }
         );
     }
-
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    public function boot(Application $app)
-    {
-    }
-
 }
